@@ -1,103 +1,128 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import Link from "next/link";
-import { Spectral, Handjet, Roboto_Condensed } from "next/font/google";
+import { Handjet } from "next/font/google";
 
-// Fonts
-const spectral = Spectral({ subsets: ["latin"], weight: "400" });
 const handjet = Handjet({ subsets: ["latin"], weight: "600" });
-const robotoCondensed = Roboto_Condensed({ subsets: ["latin"], weight: "400" });
 
 export default function BoothPage() {
-    const [timer, setTimer] = useState(7);
-    const [isCounting, setIsCounting] = useState(false);
-    const [selectedStrip, setSelectedStrip] = useState(null);
+  const videoRef = useRef(null);
+  const [selectedStrip, setSelectedStrip] = useState(null);
+  const [timer, setTimer] = useState(7);
+  const [isCounting, setIsCounting] = useState(false);
+  const [photoCount, setPhotoCount] = useState(0);
 
-    useEffect(() => {
-        // Ophalen welke photostrip gekozen is
-        const storedStrip = localStorage.getItem("selectedStrip");
-        setSelectedStrip(storedStrip);
+  useEffect(() => {
+    // Ophalen welke photostrip gekozen is
+    const strip = localStorage.getItem("selectedStrip");
+    setSelectedStrip(strip);
 
-        /*
-          Later:
-          - gebruik selectedStrip om anime overlay te tonen
-          - bv: if (selectedStrip === "jjk-special") → JJK svg
-        */
-    }, []);
-
-    useEffect(() => {
-        if (!isCounting) return;
-
-        if (timer === 0) {
-            setIsCounting(false);
-
-            /*
-              Later:
-              - snapshot maken van webcam
-              - timer resetten naar 7
-              - volgende foto starten (max 3)
-            */
-            return;
+    // Start webcam
+    const startWebcam = async () => {
+      try {
+        const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+        if (videoRef.current) {
+          videoRef.current.srcObject = stream;
+          videoRef.current.play();
         }
+      } catch (err) {
+        console.error("Webcam error:", err);
+      }
+    };
 
-        const interval = setInterval(() => {
-            setTimer((prev) => prev - 1);
-        }, 1000);
+    startWebcam();
+  }, []);
 
-        return () => clearInterval(interval);
-    }, [isCounting, timer]);
+  useEffect(() => {
+    if (!isCounting) return;
 
-    return (
-        <div className="relative flex flex-col items-center justify-center w-full h-screen">
+    if (timer === 0) {
+      setIsCounting(false);
+      setPhotoCount((prev) => prev + 1);
+      setTimer(7);
 
-            {/* GO BACK BUTTON */}
-            <div className="absolute top-[3vh] left-[2vw] z-50">
-                <Link href="/photostrip">
-                    <button
-                        className={`font-handjet ${handjet.className} bg-[#fffcfa] border-[3px] border-black px-[2.5vw] py-[1.2vh] text-[1.5vw] hover:bg-black hover:text-[#fffcfa] transition-all duration-300 cursor-pointer`}
-                    >
-                        GO BACK
-                    </button>
-                </Link>
-            </div>
+      // Hier zou je de snapshot van de webcam kunnen maken
+      /*
+        const canvas = document.createElement("canvas");
+        canvas.width = 640;
+        canvas.height = 480;
+        const ctx = canvas.getContext("2d");
+        ctx.drawImage(videoRef.current, 0, 0, canvas.width, canvas.height);
+        const dataUrl = canvas.toDataURL("image/png");
+        console.log("Photo taken:", dataUrl);
+      */
 
-            {/* WEBCAM PLACEHOLDER */}
-            <div className="relative w-[910px] h-[512px] bg-neutral-900 border-[3px] border-black flex items-center justify-center mt-[6vh]">
+      return;
+    }
 
-                {/* Timer overlay */}
-                <span className={`font-handjet ${handjet.className} text-[6vw]`}>
-                    {isCounting ? timer : ""}
-                </span>
+    const interval = setInterval(() => {
+      setTimer((prev) => prev - 1);
+    }, 1000);
 
-                {/* 
-          Later:
-          - hier komt <video> webcam feed
-          - hier komt anime SVG overlay (absolute positioned)
+    return () => clearInterval(interval);
+  }, [isCounting, timer]);
+
+  const handleStart = () => {
+    if (photoCount >= 3) {
+      alert("You have already taken 3 photos!");
+      return;
+    }
+    setIsCounting(true);
+  };
+
+  return (
+    <div className="relative flex flex-col items-center justify-center w-full h-screen">
+
+      {/* GO BACK BUTTON */}
+      <div className="absolute top-[3vh] left-[2vw] z-50">
+        <Link href="/photostrip">
+          <button
+            className={`font-handjet ${handjet.className} bg-[#fffcfa] border-[3px] border-black px-[2.5vw] py-[1.2vh] text-[1.5vw] hover:bg-black hover:text-[#fffcfa] transition-all duration-300 cursor-pointer`}
+          >
+            GO BACK
+          </button>
+        </Link>
+      </div>
+
+      {/* WEBCAM */}
+      <div className="relative w-[910px] h-[512px] bg-black border-[3px] border-white flex items-center justify-center mt-[6vh]">
+        <video
+          ref={videoRef}
+          className="w-full h-full object-cover"
+          style={{ transform: "scaleX(-1)" }} // zorgt dat webcam niet gespiegeld is
+        ></video>
+
+        {/* Timer overlay */}
+        {isCounting && (
+          <span className={`absolute font-handjet ${handjet.className} text-[6vw] text-white`}>
+            {timer}
+          </span>
+        )}
+
+        {/* Placeholder voor overlay (nog niet actief) */}
+        {/*
+          Als je specials hebt geselecteerd, kun je hier een SVG overlay renderen
+          bijv: {selectedStrip === "/jjk_special.png" && <JJKOverlay />}
         */}
-            </div>
+      </div>
 
-            {/* BUTTON */}
-            <button
-                onClick={() => {
-                    setTimer(7);
-                    setIsCounting(true);
+      {/* INSERT COIN BUTTON */}
+      <button
+        onClick={handleStart}
+        disabled={isCounting || photoCount >= 3}
+        className={`font-handjet ${handjet.className} bg-[#fffcfa] border-[3px] border-black px-[2.5vw] py-[1.2vh] text-[1.5vw] hover:bg-black hover:text-[#fffcfa] transition-all duration-300 cursor-pointer mt-[3vh] disabled:opacity-50 disabled:cursor-not-allowed`}
+      >
+        INSERT COIN
+      </button>
 
-                    /*
-                      Later:
-                      - foto teller starten (1/3)
-                      - disable button tijdens countdown
-                    */
-                }}
-                className={`font-handjet ${handjet.className} bg-[#fffcfa] border-[3px] border-black px-[2.5vw] py-[1.2vh] text-[1.5vw] hover:bg-black hover:text-[#fffcfa] transition-all duration-300 cursor-pointer mt-[3vh]`}
-            >
-                INSERT COIN
-            </button>
-
-            {/* DEBUG (mag later weg) */}
-            <p className="mt-6 opacity-40 text-sm">
-                Selected strip: {selectedStrip || "none"}
-            </p>
-        </div>
-    );
+      {/* Debug */}
+      <p className="mt-6 text-black opacity-50">
+        Selected strip: {selectedStrip || "none"}
+      </p>
+      <p className="text-black opacity-50">
+        Photos taken: {photoCount} / 3
+      </p>
+    </div>
+  );
 }

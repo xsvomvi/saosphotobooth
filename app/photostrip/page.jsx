@@ -1,20 +1,17 @@
+"use client";
+
 import React from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { Spectral, Handjet, Roboto_Condensed } from "next/font/google";
+import { Handjet } from "next/font/google";
+import { useRouter } from "next/navigation";
 
-// Fonts
-const spectral = Spectral({ subsets: ["latin"], weight: "400" });
 const handjet = Handjet({ subsets: ["latin"], weight: "600" });
-const robotoCondensed = Roboto_Condensed({ subsets: ["latin"], weight: "400" });
 
 export default function PhotostripPage() {
-  const starStudioStrips = [
-    "/jjk_special.png",
-    "/ds_special.png",
-    "/fr_special.png",
-  ];
+  const router = useRouter();
 
+  // Patterned strips
   const patternedStripsJJK = [
     "/jjk_strip_1.png",
     "/jjk_strip_2.png",
@@ -47,11 +44,26 @@ export default function PhotostripPage() {
     "/n_strip_5.png",
   ];
 
+  // Specials (nog niet actief, voor toekomstige overlay functionaliteit)
+  /*
+  const starStudioStrips = [
+    "/jjk_special.png",
+    "/ds_special.png",
+    "/fr_special.png",
+  ];
+  */
+
+  const handleSelectStrip = (src) => {
+    // Opslaan in localStorage zodat Booth weet welke photostrip gekozen is
+    localStorage.setItem("selectedStrip", src);
+
+    // Doorsturen naar booth pagina
+    router.push("/booth");
+  };
+
   return (
-    <div
-      id="index"
-      className="relative flex flex-col w-full h-screen overflow-x-hidden px-[5vw] items-center"
-    >
+    <div className="relative flex flex-col items-center px-[5vw] py-[5vh]">
+      
       {/* GO BACK BUTTON */}
       <div className="absolute top-[3vh] left-[2vw] z-50">
         <Link href="/">
@@ -63,157 +75,119 @@ export default function PhotostripPage() {
         </Link>
       </div>
 
-      {/* TITEL */}
-      <h1
-        className={`mt-[10vh] font-handjet ${handjet.className} text-[4vw] text-center cursor-default`}
-      >
-        {"CHOOSE YOUR STRIP TO CONTINUE:".split("").map((char, idx) => (
-          <span
-            key={idx}
-            className="pop-letter"
-            style={{ animationDelay: `${idx * 0.12}s` }}
-          >
-            {char === " " ? "\u00A0" : char}
-          </span>
-        ))}
+      {/* Titel */}
+      <h1 className={`text-[4vw] font-handjet ${handjet.className} mb-8`}>
+        CHOOSE YOUR PHOTO STRIP
       </h1>
 
-      {/* STAR STUDIO SPECIALS */}
-      <p className={`mt-12 font-handjet ${handjet.className} text-[2vw] text-center`}>
+      {/* Optional: specials zouden hier kunnen komen */}
+      {/*
+      <p className={`font-handjet ${handjet.className} text-[2vw] mb-4`}>
         [STAR STUDIO SPECIALS]
       </p>
-
-      <div className="mt-6 flex justify-center gap-8 flex-wrap">
+      <div className="flex justify-center gap-8 flex-wrap mb-12">
         {starStudioStrips.map((src, idx) => (
           <div
             key={idx}
-            className="cursor-pointer transition-all duration-300 ease-out hover:scale-105 hover:drop-shadow-[0_0_20px_rgba(255,255,255,0.15)]"
+            className="cursor-pointer transition-transform hover:scale-105"
+            onClick={() => handleSelectStrip(src)}
           >
             <Image
               src={src}
               alt={`Star Studio Photostrip ${idx + 1}`}
-              width={200.15}
+              width={200}
               height={600}
               className="object-contain"
             />
-
-            {/*
-              Later:
-              - onClick → photostrip selecteren
-              - opslaan in state / context
-              - doorgaan naar webcam pagina
-            */}
           </div>
         ))}
       </div>
+      */}
 
-      {/* PATTERNED: JUJUTSU KAISEN */}
-      <p className={`mt-24 font-handjet ${handjet.className} text-[2vw] text-center`}>
+      {/* Patterned: JJK */}
+      <p className={`font-handjet ${handjet.className} text-[2vw] mb-4`}>
         [PATTERNED: JUJUTSU KAISEN INSPIRED]
       </p>
-
-      <div className="mt-6 flex justify-center gap-8 flex-wrap">
+      <div className="flex justify-center gap-8 flex-wrap mb-12">
         {patternedStripsJJK.map((src, idx) => (
           <div
             key={idx}
-            className="cursor-pointer transition-all duration-300 ease-out hover:scale-105 hover:drop-shadow-[0_0_20px_rgba(255,255,255,0.15)]"
+            className="cursor-pointer transition-transform hover:scale-105"
+            onClick={() => handleSelectStrip(src)}
           >
             <Image
               src={src}
               alt={`JJK Photostrip ${idx + 1}`}
-              width={200.15}
+              width={200}
               height={600}
               className="object-contain"
             />
-
-            {/*
-              Later:
-              - JJK character SVG overlay
-              - links/rechts positioneren in webcam preview
-            */}
           </div>
         ))}
       </div>
 
-      {/* PATTERNED: DEMON SLAYER */}
-      <p className={`mt-24 font-handjet ${handjet.className} text-[2vw] text-center`}>
+      {/* Patterned: Demon Slayer */}
+      <p className={`font-handjet ${handjet.className} text-[2vw] mb-4`}>
         [PATTERNED: DEMON SLAYER INSPIRED]
       </p>
-
-      <div className="mt-6 flex justify-center gap-8 flex-wrap">
+      <div className="flex justify-center gap-8 flex-wrap mb-12">
         {patternedStripsDS.map((src, idx) => (
           <div
             key={idx}
-            className="cursor-pointer transition-all duration-300 ease-out hover:scale-105 hover:drop-shadow-[0_0_20px_rgba(255,255,255,0.15)]"
+            className="cursor-pointer transition-transform hover:scale-105"
+            onClick={() => handleSelectStrip(src)}
           >
             <Image
               src={src}
               alt={`Demon Slayer Photostrip ${idx + 1}`}
-              width={200.15}
+              width={200}
               height={600}
               className="object-contain"
             />
-
-            {/*
-              Later:
-              - Demon Slayer overlay
-              - andere pose / framing
-            */}
           </div>
         ))}
       </div>
 
-      {/* PATTERNED: FRIEREN */}
-      <p className={`mt-24 font-handjet ${handjet.className} text-[2vw] text-center`}>
+      {/* Patterned: Frieren */}
+      <p className={`font-handjet ${handjet.className} text-[2vw] mb-4`}>
         [PATTERNED: FRIEREN INSPIRED]
       </p>
-
-      <div className="mt-6 flex justify-center gap-8 flex-wrap">
+      <div className="flex justify-center gap-8 flex-wrap mb-12">
         {patternedStripsFR.map((src, idx) => (
           <div
             key={idx}
-            className="cursor-pointer transition-all duration-300 ease-out hover:scale-105 hover:drop-shadow-[0_0_20px_rgba(255,255,255,0.15)]"
+            className="cursor-pointer transition-transform hover:scale-105"
+            onClick={() => handleSelectStrip(src)}
           >
             <Image
               src={src}
               alt={`Frieren Photostrip ${idx + 1}`}
-              width={200.15}
+              width={200}
               height={600}
               className="object-contain"
             />
-
-            {/*
-              Later:
-              - Frieren themed SVG overlay
-            */}
           </div>
         ))}
       </div>
 
-      {/* PATTERNED: NANA */}
-      <p className={`mt-24 font-handjet ${handjet.className} text-[2vw] text-center`}>
+      {/* Patterned: Nana */}
+      <p className={`font-handjet ${handjet.className} text-[2vw] mb-4`}>
         [PATTERNED: NANA INSPIRED]
       </p>
-
-      <div className="mt-6 mb-24 flex justify-center gap-8 flex-wrap">
+      <div className="flex justify-center gap-8 flex-wrap mb-12">
         {patternedStripsN.map((src, idx) => (
           <div
             key={idx}
-            className="cursor-pointer transition-all duration-300 ease-out hover:scale-105 hover:drop-shadow-[0_0_20px_rgba(255,255,255,0.15)]"
+            className="cursor-pointer transition-transform hover:scale-105"
+            onClick={() => handleSelectStrip(src)}
           >
             <Image
               src={src}
               alt={`Nana Photostrip ${idx + 1}`}
-              width={200.15}
+              width={200}
               height={600}
               className="object-contain"
             />
-
-            {/*
-              Later:
-              - Nana aesthetic overlay
-              - aangepaste compositie
-            */}
           </div>
         ))}
       </div>
