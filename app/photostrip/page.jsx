@@ -50,13 +50,24 @@ export default function PhotostripPage() {
   return (
     <div
       id="index"
-      className="flex flex-col w-full h-screen overflow-x-hidden px-[5vw] items-center"
+      className="relative flex flex-col w-full h-screen overflow-x-hidden px-[5vw] items-center"
     >
-      {/* Titel */}
+      {/* GO BACK BUTTON */}
+      <div className="absolute top-[3vh] left-[2vw] z-50">
+        <Link href="/">
+          <button
+            className={`font-handjet ${handjet.className} bg-[#fffcfa] border-[3px] border-black px-[2.5vw] py-[1.2vh] text-[1.5vw] hover:bg-black hover:text-[#fffcfa] transition-all duration-300 cursor-pointer`}
+          >
+            GO BACK
+          </button>
+        </Link>
+      </div>
+
+      {/* TITEL */}
       <h1
         className={`mt-[10vh] font-handjet ${handjet.className} text-[4vw] text-center cursor-default`}
       >
-        {"CHOOSE YOUR PHOTO STRIP:".split("").map((char, idx) => (
+        {"CHOOSE YOUR STRIP TO CONTINUE:".split("").map((char, idx) => (
           <span
             key={idx}
             className="pop-letter"
@@ -67,106 +78,145 @@ export default function PhotostripPage() {
         ))}
       </h1>
 
-      {/* Star Studio Specials */}
-      <p
-        className={`mt-12 font-handjet ${handjet.className} text-[2vw] text-center`}
-      >
+      {/* STAR STUDIO SPECIALS */}
+      <p className={`mt-12 font-handjet ${handjet.className} text-[2vw] text-center`}>
         [STAR STUDIO SPECIALS]
       </p>
 
       <div className="mt-6 flex justify-center gap-8 flex-wrap">
         {starStudioStrips.map((src, idx) => (
-          <Image
+          <div
             key={idx}
-            src={src}
-            alt={`Photostrip ${idx + 1}`}
-            width={200.15}
-            height={600}
-            className="object-contain"
-          />
+            className="cursor-pointer transition-all duration-300 ease-out hover:scale-105 hover:drop-shadow-[0_0_20px_rgba(255,255,255,0.15)]"
+          >
+            <Image
+              src={src}
+              alt={`Star Studio Photostrip ${idx + 1}`}
+              width={200.15}
+              height={600}
+              className="object-contain"
+            />
+
+            {/*
+              Later:
+              - onClick → photostrip selecteren
+              - opslaan in state / context
+              - doorgaan naar webcam pagina
+            */}
+          </div>
         ))}
       </div>
 
-      {/* Patterned: Jujutsu Kaisen Inspired */}
-      <p
-        className={`mt-24 font-handjet ${handjet.className} text-[2vw] text-center`}
-      >
+      {/* PATTERNED: JUJUTSU KAISEN */}
+      <p className={`mt-24 font-handjet ${handjet.className} text-[2vw] text-center`}>
         [PATTERNED: JUJUTSU KAISEN INSPIRED]
       </p>
 
       <div className="mt-6 flex justify-center gap-8 flex-wrap">
         {patternedStripsJJK.map((src, idx) => (
-          <Image
+          <div
             key={idx}
-            src={src}
-            alt={`Patterned Photostrip ${idx + 1}`}
-            width={200.15}
-            height={600}
-            className="object-contain"
-          />
+            className="cursor-pointer transition-all duration-300 ease-out hover:scale-105 hover:drop-shadow-[0_0_20px_rgba(255,255,255,0.15)]"
+          >
+            <Image
+              src={src}
+              alt={`JJK Photostrip ${idx + 1}`}
+              width={200.15}
+              height={600}
+              className="object-contain"
+            />
+
+            {/*
+              Later:
+              - JJK character SVG overlay
+              - links/rechts positioneren in webcam preview
+            */}
+          </div>
         ))}
       </div>
 
-      {/* Patterned: Demon Slayer Inspired */}
-      <p
-        className={`mt-24 font-handjet ${handjet.className} text-[2vw] text-center`}
-      >
+      {/* PATTERNED: DEMON SLAYER */}
+      <p className={`mt-24 font-handjet ${handjet.className} text-[2vw] text-center`}>
         [PATTERNED: DEMON SLAYER INSPIRED]
       </p>
 
       <div className="mt-6 flex justify-center gap-8 flex-wrap">
         {patternedStripsDS.map((src, idx) => (
-          <Image
+          <div
             key={idx}
-            src={src}
-            alt={`Patterned Photostrip ${idx + 1}`}
-            width={200.15}
-            height={600}
-            className="object-contain"
-          />
+            className="cursor-pointer transition-all duration-300 ease-out hover:scale-105 hover:drop-shadow-[0_0_20px_rgba(255,255,255,0.15)]"
+          >
+            <Image
+              src={src}
+              alt={`Demon Slayer Photostrip ${idx + 1}`}
+              width={200.15}
+              height={600}
+              className="object-contain"
+            />
+
+            {/*
+              Later:
+              - Demon Slayer overlay
+              - andere pose / framing
+            */}
+          </div>
         ))}
       </div>
 
-      {/* Patterned: Frieren Inspired */}
-      <p
-        className={`mt-24 font-handjet ${handjet.className} text-[2vw] text-center`}
-      >
+      {/* PATTERNED: FRIEREN */}
+      <p className={`mt-24 font-handjet ${handjet.className} text-[2vw] text-center`}>
         [PATTERNED: FRIEREN INSPIRED]
       </p>
 
       <div className="mt-6 flex justify-center gap-8 flex-wrap">
         {patternedStripsFR.map((src, idx) => (
-          <Image
+          <div
             key={idx}
-            src={src}
-            alt={`Patterned Photostrip ${idx + 1}`}
-            width={200.15}
-            height={600}
-            className="object-contain"
-          />
+            className="cursor-pointer transition-all duration-300 ease-out hover:scale-105 hover:drop-shadow-[0_0_20px_rgba(255,255,255,0.15)]"
+          >
+            <Image
+              src={src}
+              alt={`Frieren Photostrip ${idx + 1}`}
+              width={200.15}
+              height={600}
+              className="object-contain"
+            />
+
+            {/*
+              Later:
+              - Frieren themed SVG overlay
+            */}
+          </div>
         ))}
       </div>
 
-      {/* Patterned: Nana Inspired */}
-      <p
-        className={`mt-24 font-handjet ${handjet.className} text-[2vw] text-center`}
-      >
+      {/* PATTERNED: NANA */}
+      <p className={`mt-24 font-handjet ${handjet.className} text-[2vw] text-center`}>
         [PATTERNED: NANA INSPIRED]
       </p>
 
       <div className="mt-6 mb-24 flex justify-center gap-8 flex-wrap">
         {patternedStripsN.map((src, idx) => (
-          <Image
+          <div
             key={idx}
-            src={src}
-            alt={`Patterned Photostrip ${idx + 1}`}
-            width={200.15}
-            height={600}
-            className="object-contain"
-          />
+            className="cursor-pointer transition-all duration-300 ease-out hover:scale-105 hover:drop-shadow-[0_0_20px_rgba(255,255,255,0.15)]"
+          >
+            <Image
+              src={src}
+              alt={`Nana Photostrip ${idx + 1}`}
+              width={200.15}
+              height={600}
+              className="object-contain"
+            />
+
+            {/*
+              Later:
+              - Nana aesthetic overlay
+              - aangepaste compositie
+            */}
+          </div>
         ))}
       </div>
-
     </div>
   );
 }
