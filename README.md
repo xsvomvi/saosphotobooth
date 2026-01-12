@@ -1,36 +1,54 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+Sao's Portfolio
 
-## Getting Started
+Author: Saomai Ngo
+Project: Showcase Portfolio Website
 
-First, run the development server:
+# Overview
 
-```bash
+Sao's Portfolio is a personal showcase website created to present my growth, progress and creative development as a designer and developer. The portfolio includes a home page, projects page, skills page and contact page. Each section highlights a different part of my journey and provides insight into who I am professionally and creatively.
+
+This portfolio is not only a space to display finished work, but also a reflection of my learning process and evolving design approach.
+
+# Installation Instructions
+
+If you'd like to set up and run this portfolio project locally, follow these steps:
+
+1. Clone the Repository >
+Start by cloning the GitHub repository to your local machine:
+git clone <repository-url>
+
+Replace <repository-url> with the actual Git URL of the repository (e.g., https://github.com/yourusername/portfolio.git).
+
+2. Navigate to the Project Directory >
+After cloning the repository, navigate to the project folder:
+cd sao-portfolio
+
+3. Install Dependencies >
+To install all the required dependencies for the project, run:
+npm install
+
+4. Start the Development Server >
+Once the dependencies are installed, start the development server with:
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+This will start the development server and you should be able to access the portfolio locally at http://localhost:3000 (or another port if configured differently).
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+# Technologies Used
+React.js: for building the user interface
+Tailwind CSS: for styling the portfolio
+Node.js: as the runtime environment for running JavaScript outside the browser
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+# Project Goal
 
-## Learn More
+The goal of this project was to create a personal portfolio that demonstrates my development in both design and web development. I wanted to show my growth over time and present it in a way that feels authentic to my personality and style. The portfolio highlights completed projects while also acknowledging the learning journey behind them. It serves as both a professional showcase and a personal documentation of progress.
 
-To learn more about Next.js, take a look at the following resources:
+# My Role
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+I was responsible for every stage of creating this portfolio. This included:
+-- Planning the concept and overall visual style
+-- Designing wireframes and page layouts
+-- Creating interactive prototypes
+-- Developing the website structure and content
+-- Refining the user experience through feedback and iteration
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+My focus was to build a portfolio that is visually engaging and easy to navigate. The portfolio should also clearly communicate my skills, creativity and personal identity.
