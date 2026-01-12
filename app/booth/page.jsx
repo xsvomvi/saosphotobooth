@@ -12,6 +12,7 @@ export default function BoothPage() {
   const [timer, setTimer] = useState(7);
   const [isCounting, setIsCounting] = useState(false);
   const [photoCount, setPhotoCount] = useState(0);
+  const [photosTaken, setPhotosTaken] = useState([]); // hier slaan we de foto's op
 
   useEffect(() => {
     // Ophalen welke photostrip gekozen is
@@ -40,18 +41,24 @@ export default function BoothPage() {
     if (timer === 0) {
       setIsCounting(false);
       setPhotoCount((prev) => prev + 1);
-      setTimer(7);
 
-      // Hier zou je de snapshot van de webcam kunnen maken
-      /*
+      // Maak een foto van de webcam
+      if (videoRef.current) {
         const canvas = document.createElement("canvas");
-        canvas.width = 640;
-        canvas.height = 480;
+        canvas.width = videoRef.current.videoWidth || 640;
+        canvas.height = videoRef.current.videoHeight || 480;
         const ctx = canvas.getContext("2d");
         ctx.drawImage(videoRef.current, 0, 0, canvas.width, canvas.height);
         const dataUrl = canvas.toDataURL("image/png");
-        console.log("Photo taken:", dataUrl);
-      */
+
+        setPhotosTaken((prev) => [...prev, dataUrl]);
+      }
+
+      // Reset timer voor volgende foto (tot max 3)
+      if (photoCount + 1 < 3) {
+        setTimer(7);
+        setIsCounting(true);
+      }
 
       return;
     }
@@ -61,7 +68,7 @@ export default function BoothPage() {
     }, 1000);
 
     return () => clearInterval(interval);
-  }, [isCounting, timer]);
+  }, [isCounting, timer, photoCount]);
 
   const handleStart = () => {
     if (photoCount >= 3) {
@@ -90,7 +97,7 @@ export default function BoothPage() {
         <video
           ref={videoRef}
           className="w-full h-full object-cover"
-          style={{ transform: "scaleX(-1)" }} // zorgt dat webcam niet gespiegeld is
+          style={{ transform: "scaleX(-1)" }} // webcam niet gespiegeld
         ></video>
 
         {/* Timer overlay */}
@@ -100,9 +107,9 @@ export default function BoothPage() {
           </span>
         )}
 
-        {/* Placeholder voor overlay (nog niet actief) */}
+        {/* Placeholder voor overlay */}
         {/*
-          Als je specials hebt geselecteerd, kun je hier een SVG overlay renderen
+          Hier kan je later de anime SVG overlay toevoegen
           bijv: {selectedStrip === "/jjk_special.png" && <JJKOverlay />}
         */}
       </div>
@@ -116,13 +123,20 @@ export default function BoothPage() {
         INSERT COIN
       </button>
 
-      {/* Debug */}
+      {/* Debug info */}
       <p className="mt-6 text-black opacity-50">
         Selected strip: {selectedStrip || "none"}
       </p>
       <p className="text-black opacity-50">
         Photos taken: {photoCount} / 3
       </p>
+
+      {/* Placeholder voor previews van foto's (nog uitgeschakeld) */}
+      {/*
+        {photosTaken.map((photo, idx) => (
+          <img key={idx} src={photo} alt={`Photo ${idx + 1}`} className="mt-4 w-40 border-2 border-white" />
+        ))}
+      */}
     </div>
   );
 }
