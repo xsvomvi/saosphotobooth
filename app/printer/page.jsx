@@ -136,7 +136,7 @@ export default function PrinterPage() {
       </div>
 
       {/* SAVE BUTTON */}
-      <div className="flex mt-auto mb-1">
+      <div className="flex mt-auto">
         <button
           onClick={() => {
             // Speel button geluid af
