@@ -136,7 +136,7 @@ export default function PrinterPage() {
       </div>
 
       {/* SAVE BUTTON */}
-      <div className="flex">
+      <div className="flex mt-auto mb-1">
         <button
           onClick={() => {
             // Speel button geluid af
@@ -147,7 +147,7 @@ export default function PrinterPage() {
             // Save photostrip
             savePhotoStrip();
           }}
-          className={`font-handjet ${handjet.className} bg-[#fffcfa] border-[3px] border-black px-[2.5vw] py-[1.2vh] text-[1.5vw] hover:bg-black hover:text-[#fffcfa] transition-all duration-300 cursor-pointer mt-[7vh]`}
+          className={`font-handjet ${handjet.className} bg-[#fffcfa] border-[3px] border-black px-[2.5vw] py-[1.2vh] text-[1.5vw] hover:bg-black hover:text-[#fffcfa] transition-all duration-300 cursor-pointer`}
         >
           SAVE PHOTO STRIP
         </button>
