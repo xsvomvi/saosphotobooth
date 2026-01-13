@@ -76,9 +76,19 @@ export default function PhotostripPage() {
       </div>
 
       {/* Titel */}
-      <h1 className={`text-[4vw] font-handjet ${handjet.className} mb-8`}>
-        CHOOSE YOUR PHOTO STRIP:
-      </h1>
+        <h1
+          className={`mt-16 mb-8 font-handjet ${handjet.className} text-[4vw] text-center cursor-default`}
+        >
+          {"LET'S CHOOSE YOUR PHOTO STRIP.".split("").map((char, idx) => (
+            <span
+              key={idx}
+              className="pop-letter"
+              style={{ animationDelay: `${idx * 0.12}s` }}
+            >
+              {char === " " ? "\u00A0" : char}
+            </span>
+          ))}
+        </h1>
 
       {/* Optional: specials zouden hier kunnen komen */}
       {/*
@@ -105,10 +115,10 @@ export default function PhotostripPage() {
       */}
 
       {/* Patterned: JJK */}
-      <p className={`font-handjet ${handjet.className} text-[2vw] mb-4`}>
-        [PATTERNED: JUJUTSU KAISEN INSPIRED]
+      <p className={`font-handjet ${handjet.className} text-[2vw] mb-6`}>
+        [JUJUTSU KAISEN INSPIRED]
       </p>
-      <div className="flex justify-center gap-8 flex-wrap mb-12">
+      <div className="flex justify-center gap-8 flex-wrap mb-20">
         {patternedStripsJJK.map((src, idx) => (
           <div
             key={idx}
@@ -127,10 +137,10 @@ export default function PhotostripPage() {
       </div>
 
       {/* Patterned: Demon Slayer */}
-      <p className={`font-handjet ${handjet.className} text-[2vw] mb-4`}>
-        [PATTERNED: DEMON SLAYER INSPIRED]
+      <p className={`font-handjet ${handjet.className} text-[2vw] mb-6`}>
+        [DEMON SLAYER INSPIRED]
       </p>
-      <div className="flex justify-center gap-8 flex-wrap mb-12">
+      <div className="flex justify-center gap-8 flex-wrap mb-20">
         {patternedStripsDS.map((src, idx) => (
           <div
             key={idx}
@@ -149,10 +159,10 @@ export default function PhotostripPage() {
       </div>
 
       {/* Patterned: Frieren */}
-      <p className={`font-handjet ${handjet.className} text-[2vw] mb-4`}>
-        [PATTERNED: FRIEREN INSPIRED]
+      <p className={`font-handjet ${handjet.className} text-[2vw] mb-6`}>
+        [SOUSOU NO FRIEREN INSPIRED]
       </p>
-      <div className="flex justify-center gap-8 flex-wrap mb-12">
+      <div className="flex justify-center gap-8 flex-wrap mb-20">
         {patternedStripsFR.map((src, idx) => (
           <div
             key={idx}
@@ -171,10 +181,10 @@ export default function PhotostripPage() {
       </div>
 
       {/* Patterned: Nana */}
-      <p className={`font-handjet ${handjet.className} text-[2vw] mb-4`}>
-        [PATTERNED: NANA INSPIRED]
+      <p className={`font-handjet ${handjet.className} text-[2vw] mb-6`}>
+        [REQUESTED: NANA INSPIRED]
       </p>
-      <div className="flex justify-center gap-8 flex-wrap mb-12">
+      <div className="flex justify-center gap-8 flex-wrap mb-20">
         {patternedStripsN.map((src, idx) => (
           <div
             key={idx}

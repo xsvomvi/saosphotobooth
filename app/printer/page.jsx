@@ -46,7 +46,7 @@ export default function PrinterPage() {
 
       {/* PHOTOSTRIP CONTAINER */}
       <div
-        className="relative w-[205px] h-[614px] bg-cover bg-center mt-13"
+        className="relative w-[205px] h-[614px] bg-cover bg-center mt-7"
         style={{
           backgroundImage: `url(${selectedStrip})`, // PNG als overlay
         }}
@@ -70,21 +70,13 @@ export default function PrinterPage() {
       </div>
 
       {/* BUTTONS */}
-      <div className="flex gap-6 mt-8">
+      <div className="flex">
         <button
           onClick={() => window.print()}
-          className={`font-handjet ${handjet.className} bg-[#fffcfa] border-[3px] border-black px-[2.5vw] py-[1.2vh] text-[1.5vw] hover:bg-black hover:text-[#fffcfa] transition-all duration-300 cursor-pointer`}
+          className={`font-handjet ${handjet.className} bg-[#fffcfa] border-[3px] border-black px-[2.5vw] py-[1.2vh] text-[1.5vw] hover:bg-black hover:text-[#fffcfa] transition-all duration-300 cursor-pointer mt-15`}
         >
           SAVE PHOTO STRIP
         </button>
-
-        <Link href="/photostrip">
-          <button
-            className={`font-handjet ${handjet.className} bg-[#fffcfa] border-[3px] border-black px-[2.5vw] py-[1.2vh] text-[1.5vw] hover:bg-black hover:text-[#fffcfa] transition-all duration-300 cursor-pointer`}
-          >
-            RE-SHOOT PHOTO STRIP
-          </button>
-        </Link>
       </div>
     </div>
   );

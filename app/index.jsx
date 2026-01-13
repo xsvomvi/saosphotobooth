@@ -35,7 +35,7 @@ export default function Index() {
 
         {/* Functie */}
         <h1
-          className={`mt-[1vh] font-handjet ${handjet.className} text-[4vw] text-center cursor-default`}
+          className={`mt-1 font-handjet ${handjet.className} text-[4vw] text-center cursor-default`}
         >
           {"A PHOTOBOOTH, MADE BY SAO.".split("").map((char, idx) => (
             <span
@@ -49,7 +49,7 @@ export default function Index() {
         </h1>
 
         {/* Knoppen */}
-        <div className="mt-[3vh] flex gap-6">
+        <div className="mt-8 flex gap-6">
           <Link href="/photostrip">
             <button
               className={`font-handjet ${handjet.className} bg-[#fffcfa] border-[3px] border-black px-[2.5vw] py-[1.2vh] text-[1.5vw] hover:bg-black hover:text-[#fffcfa] transition-all duration-300 cursor-pointer`}
@@ -73,7 +73,7 @@ export default function Index() {
           alt="Photobooth Full"
           width={350}
           height={100}
-          style={{ height: "65%", width: "auto" }} // height aanpassen
+          style={{ height: "65%", width: "auto" }}
         />
       </div>
     </div>

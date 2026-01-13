@@ -91,7 +91,14 @@ export default function BoothPage() {
   };
 
   return (
-    <div className="relative flex flex-col items-center justify-center w-full h-screen">
+    <div className="relative flex flex-col items-center justify-center w-full h-screen"
+      style={{
+        backgroundImage: "url('/booth_background.svg')",
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+        backgroundRepeFat: "no-repeat",
+      }}
+    >
 
       {/* GO BACK BUTTON */}
       <div className="absolute top-[3vh] left-[2vw] z-50">
@@ -105,7 +112,7 @@ export default function BoothPage() {
       </div>
 
       {/* WEBCAM */}
-      <div className="relative w-[910px] h-[512px] bg-black border-[4px] border-black flex items-center justify-center mt-[6vh]">
+      <div className="relative w-[910px] h-[512px] bg-black border-[4px] border-black flex items-center justify-center mt-16">
         <video
           ref={videoRef}
           className="w-full h-full object-cover"
@@ -138,13 +145,13 @@ export default function BoothPage() {
       <button
         onClick={handleStart}
         disabled={isCounting || photoCount >= 3}
-        className={`font-handjet ${handjet.className} bg-[#fffcfa] border-[3px] border-black px-[2.5vw] py-[1.2vh] text-[1.5vw] hover:bg-black hover:text-[#fffcfa] transition-all duration-300 cursor-pointer mt-[3vh] disabled:opacity-50 disabled:cursor-not-allowed`}
+        className={`font-handjet ${handjet.className} bg-[#fffcfa] border-[3px] border-black px-[2.5vw] py-[1.2vh] text-[1.5vw] hover:bg-black hover:text-[#fffcfa] transition-all duration-300 cursor-pointer mt-8 disabled:opacity-50 disabled:cursor-not-allowed`}
       >
         INSERT COIN
       </button>
 
       {/* DEBUG */}
-      <p className="mt-6 text-black opacity-50">Photos taken: {photoCount} / 3</p>
+      <p className="mt-6 text-black opacity-50">PHOTOS TAKEN: {photoCount}/3</p>
     </div>
   );
 }
