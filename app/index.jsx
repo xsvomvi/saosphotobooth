@@ -9,6 +9,13 @@ const handjet = Handjet({ subsets: ["latin"], weight: "600" });
 const robotoCondensed = Roboto_Condensed({ subsets: ["latin"], weight: "400" });
 
 export default function Index() {
+  // Functie om audio af te spelen
+  const playButtonSound = () => {
+    const audio = new Audio("/button.mp3");
+    audio.volume = 0.1;
+    audio.play().catch((err) => console.error("Audio play error:", err));
+  };
+
   return (
     <div
       id="index"
@@ -52,6 +59,7 @@ export default function Index() {
         <div className="mt-8 flex gap-6">
           <Link href="/photostrip">
             <button
+              onClick={playButtonSound}
               className={`font-handjet ${handjet.className} bg-[#fffcfa] border-[3px] border-black px-[2.5vw] py-[1.2vh] text-[1.5vw] hover:bg-black hover:text-[#fffcfa] transition-all duration-300 cursor-pointer`}
             >
               ENTER BOOTH
@@ -59,6 +67,7 @@ export default function Index() {
           </Link>
 
           <button
+            onClick={playButtonSound}
             className={`font-handjet ${handjet.className} bg-[#fffcfa] border-[3px] border-black px-[2.5vw] py-[1.2vh] text-[1.5vw] hover:bg-black hover:text-[#fffcfa] transition-all duration-300 cursor-pointer`}
           >
             VIEW GALLERY

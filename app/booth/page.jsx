@@ -96,14 +96,20 @@ export default function BoothPage() {
           localStorage.setItem("photosTaken", JSON.stringify(newPhotos));
           return newPhotos;
         });
+
+        // SPEEL CAMERA GELUID AF bij het nemen van de foto
+        const cameraSound = new Audio("/camera.mp3");
+        cameraSound.volume = 0.05;
+        cameraSound.play().catch((err) => console.error("Audio play error:", err));
       }
 
+      // Verhoog foto teller
       setPhotoCount((prev) => prev + 1);
       setPhotoTakenIndicator(true);
       setIsCounting(false);
 
-      // Na foto: Pose-indicatie + overlay switchen voor volgende foto
       setTimeout(() => {
+        // Na foto: Pose-indicatie + overlay switchen voor volgende foto
         setPhotoTakenIndicator(false);
 
         if (selectedStrip && specialOverlays[selectedStrip]) {
@@ -113,6 +119,7 @@ export default function BoothPage() {
           }
         }
 
+        // Als alle foto's genomen zijn, door naar printer
         if (photoCount + 1 >= 3) {
           router.push("/printer");
         } else {
@@ -127,11 +134,13 @@ export default function BoothPage() {
     return () => clearInterval(interval);
   }, [isCounting, timer, photoCount, router, selectedStrip]);
 
+  // Start de booth
   const handleStart = () => {
     if (photoCount >= 3) return;
 
+    // Coin geluid
     const coinSound = new Audio("/coin.mp3");
-    coinSound.volume = 0.1;
+    coinSound.volume = 0.03;
     coinSound.play().catch((err) => console.error("Audio play error:", err));
 
     setIsCounting(true);
@@ -192,7 +201,6 @@ export default function BoothPage() {
         {/* FOTO GENOMEN INDICATIE */}
         {photoTakenIndicator && (
           <span className={`absolute font-handjet ${handjet.className} text-[6vw] text-white z-30`}>
-            POSE!
           </span>
         )}
       </div>

@@ -74,6 +74,11 @@ export default function PhotostripPage() {
 
   // Gewone strip selectie
   const handleSelectStrip = (src) => {
+    // SPEEL BUTTON GELUID AF
+    const buttonSound = new Audio("/button.mp3");
+    buttonSound.volume = 0.1;
+    buttonSound.play().catch((err) => console.error("Audio play error:", err));
+
     localStorage.setItem("selectedStrip", src);
     localStorage.removeItem("specialOverlays"); // Clear specials
     router.push("/booth");
@@ -81,6 +86,26 @@ export default function PhotostripPage() {
 
   // Special strip selectie
   const handleSelectSpecial = (special) => {
+    // SPEEL BUTTON GELUID AF
+    const buttonSound = new Audio("/button.mp3");
+    buttonSound.volume = 0.1;
+    buttonSound.play().catch((err) => console.error("Audio play error:", err));
+
+    // SPEEL EXTRA GELUID AF afhankelijk van de strip
+    if (special.strip === "/jjk_special.png") {
+      const gojoSound = new Audio("/gojo.mp3");
+      gojoSound.volume = 0.04;
+      gojoSound.play().catch((err) => console.error("Audio play error:", err));
+    } else if (special.strip === "/fr_special.png") {
+      const frierenSound = new Audio("/frieren.mp3");
+      frierenSound.volume = 0.02;
+      frierenSound.play().catch((err) => console.error("Audio play error:", err));
+    } else if (special.strip === "/ds_special.png") {
+      const inosukeSound = new Audio("/inosuke.mp3");
+      inosukeSound.volume = 0.02;
+      inosukeSound.play().catch((err) => console.error("Audio play error:", err));
+    }
+
     localStorage.setItem("selectedStrip", special.strip);
     localStorage.setItem("specialOverlays", JSON.stringify(special.overlays));
     router.push("/booth");

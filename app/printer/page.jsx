@@ -138,7 +138,15 @@ export default function PrinterPage() {
       {/* SAVE BUTTON */}
       <div className="flex">
         <button
-          onClick={savePhotoStrip}
+          onClick={() => {
+            // Speel button geluid af
+            const audio = new Audio("/button.mp3");
+            audio.volume = 0.1;
+            audio.play().catch((err) => console.error("Audio play error:", err));
+
+            // Save photostrip
+            savePhotoStrip();
+          }}
           className={`font-handjet ${handjet.className} bg-[#fffcfa] border-[3px] border-black px-[2.5vw] py-[1.2vh] text-[1.5vw] hover:bg-black hover:text-[#fffcfa] transition-all duration-300 cursor-pointer mt-15`}
         >
           SAVE PHOTO STRIP
