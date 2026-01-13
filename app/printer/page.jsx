@@ -1,132 +1,91 @@
-import React, { useRef, useState, useEffect } from "react";
-import Image from "next/image";
+"use client";
 
-// Fonts
-import { Homemade_Apple } from "next/font/google";
-const homemadeApple = Homemade_Apple({ subsets: ["latin"], weight: "400" });
+import React, { useEffect, useState } from "react";
+import Link from "next/link";
+import { Handjet } from "next/font/google";
 
-// Knoppen
-const contactButtons = [
-  { name: "instagram", url: "https://instagram.com/svospo" },
-  { name: "tiktok", url: "https://tiktok.com/@soeemiee" },
-  { name: "email", url: "mailto:bapsao@hotmail.com" },
-  { name: "linkedin", url: "https://www.linkedin.com/in/saomai-ngo-539822383/" }
-];
+const handjet = Handjet({ subsets: ["latin"], weight: "600" });
 
-const playSound = () => {
-  const audio = new Audio("/paper_fold.mp3"); 
-  audio.play();
-};
+export default function PrinterPage() {
+  const [selectedStrip, setSelectedStrip] = useState(null);
+  const [photos, setPhotos] = useState([]);
 
-export default function Contact() {
-  const contactRef = useRef(null);
-  const [animateContact, setAnimateContact] = useState(false);
-
-  // IntersectionObserver
   useEffect(() => {
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) setAnimateContact(true);
-      },
-      {
-        root: null,
-        threshold: 0.6,
-        rootMargin: "0px 0px -2% 0px"
-      }
-    );
+    // Ophalen van gekozen photostrip
+    const strip = localStorage.getItem("selectedStrip");
+    setSelectedStrip(strip);
 
-    if (contactRef.current) observer.observe(contactRef.current);
-
-    return () => {
-      if (contactRef.current) observer.unobserve(contactRef.current);
-    };
+    // Ophalen van 3 foto's
+    const photosTaken = JSON.parse(localStorage.getItem("photosTaken")) || [];
+    setPhotos(photosTaken.slice(0, 3)); // maximaal 3
   }, []);
+
+  // Exacte y-coördinaten van de foto's
+  const photoPositions = [60.7, 170.7, 280.7];
 
   return (
     <div
-      id="contact"
-      ref={contactRef}
-      className="w-full flex flex-col justify-center items-center overflow-x-hidden px-[5vw] pb-[4vh]"
+      className="flex flex-col items-center px-[5vw] py-[5vh] min-h-screen"
+      style={{
+        backgroundImage: "url('/printer_background.svg')",
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+        backgroundRepeFat: "no-repeat",
+      }}
     >
-      {/* Sticker met hover */}
-      <div
-        className={`w-[18vw] overflow-hidden ${animateContact ? "pop-logo" : "opacity-0"} 
-                    transition-transform duration-300 transform hover:scale-105 cursor-default`}
-        style={{ animationDelay: "0.2s" }}
-      >
-        <Image
-          src="/contact_sticker.svg"
-          alt="Contact Sticker"
-          width={500} 
-          height={500}
-          className="w-full h-auto"
-        />
-      </div>
-
-      {/* Tekst */}
-      <h1
-        className={`mt-[1vh] font-homemadeApple ${homemadeApple.className} text-[2vw] text-center cursor-default`}
-      >
-        {"let's create & connect".split("").map((char, idx) => (
-          <span
-            key={idx}
-            className={`inline-block ${animateContact ? "pop-letter" : "opacity-0"}`}
-            style={{ animationDelay: animateContact ? `${idx * 0.12}s` : "0s" }}
+      {/* GO BACK BUTTON */}
+      <div className="absolute top-[3vh] left-[2vw] z-50">
+        <Link href="/booth">
+          <button
+            className={`font-handjet ${handjet.className} bg-[#fffcfa] border-[3px] border-black px-[2.5vw] py-[1.2vh] text-[1.5vw] hover:bg-black hover:text-[#fffcfa] transition-all duration-300 cursor-pointer`}
           >
-            {char === " " ? "\u00A0" : char}
-          </span>
-        ))}
-      </h1>
-
-      {/* Knoppen */}
-      <div className="flex justify-between w-full px-[10vw] mt-[4vh]">
-        <div className="flex flex-col gap-[2vh]">
-          {contactButtons.slice(0, 2).map((btn) => (
-            <a
-              onClick={playSound}
-              key={btn.name}
-              href={btn.url}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex flex-wrap justify-center items-center gap-[1vw] lg:gap-[1.5vw] rounded-full px-[1.5rem] py-[0.75rem] w-[12rem] block w-[8rem] text-center border border-black py-[0.5rem] px-[0.75rem] rounded-md transition-transform duration-500 transform hover:scale-105 cursor-pointer bg-[#f5f5f5]"
-            >
-              {btn.name}
-            </a>
-          ))}
-        </div>
-
-        <div className="flex flex-col gap-[2vh]">
-          {contactButtons.slice(2, 4).map((btn) => (
-            <a
-              onClick={playSound}
-              key={btn.name}
-              href={btn.url}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex flex-wrap justify-center items-center gap-[1vw] lg:gap-[1.5vw] rounded-full px-[1.5rem] py-[0.75rem] w-[12rem] block w-[8rem] text-center border border-black py-[0.5rem] px-[0.75rem] rounded-md transition-transform duration-500 transform hover:scale-105 cursor-pointer bg-[#f5f5f5]"
-            >
-              {btn.name}
-            </a>
-          ))}
-        </div>
+            GO BACK
+          </button>
+        </Link>
       </div>
 
-      {/* Animatie */}
-      <style jsx>{`
-        @keyframes popIn {
-          0% { opacity: 0; transform: scale(0.8); }
-          50% { opacity: 1; transform: scale(1.1); }
-          100% { opacity: 1; transform: scale(1); }
-        }
+      {/* PHOTOSTRIP CONTAINER */}
+      <div
+        className="relative w-[205px] h-[614px] bg-cover bg-center mt-13"
+        style={{
+          backgroundImage: `url(${selectedStrip})`, // PNG als overlay
+        }}
+      >
+        {/* FOTO'S */}
+        {photos.map((photo, idx) => (
+          <div
+            key={idx}
+            className="absolute left-[9.1px] w-[186px] h-[105px] overflow-hidden"
+            style={{
+              top: `${photoPositions[idx]}px`,
+            }}
+          >
+            <img
+              src={photo}
+              alt={`Photo ${idx + 1}`}
+              className="w-full h-full object-cover"
+            />
+          </div>
+        ))}
+      </div>
 
-        .pop-letter, .pop-logo {
-          animation: popIn 0.5s ease forwards;
-        }
+      {/* BUTTONS */}
+      <div className="flex gap-6 mt-8">
+        <button
+          onClick={() => window.print()}
+          className={`font-handjet ${handjet.className} bg-[#fffcfa] border-[3px] border-black px-[2.5vw] py-[1.2vh] text-[1.5vw] hover:bg-black hover:text-[#fffcfa] transition-all duration-300 cursor-pointer`}
+        >
+          SAVE PHOTO STRIP
+        </button>
 
-        .opacity-0 {
-          opacity: 0;
-        }
-      `}</style>
+        <Link href="/photostrip">
+          <button
+            className={`font-handjet ${handjet.className} bg-[#fffcfa] border-[3px] border-black px-[2.5vw] py-[1.2vh] text-[1.5vw] hover:bg-black hover:text-[#fffcfa] transition-all duration-300 cursor-pointer`}
+          >
+            RE-SHOOT PHOTO STRIP
+          </button>
+        </Link>
+      </div>
     </div>
   );
 }

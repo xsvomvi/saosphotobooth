@@ -49,17 +49,17 @@ export default function Index() {
         </h1>
 
         {/* Knoppen */}
-        <div className="mt-[3vh] flex gap-[2vw]">
+        <div className="mt-[3vh] flex gap-6">
           <Link href="/photostrip">
             <button
-              className={`font-handjet ${handjet.className} bg-[#fffcfa] border-3 border-black px-[2.5vw] py-[1.2vh] text-[1.5vw] hover:bg-black hover:text-[#fffcfa] transition-all duration-300 cursor-pointer`}
+              className={`font-handjet ${handjet.className} bg-[#fffcfa] border-[3px] border-black px-[2.5vw] py-[1.2vh] text-[1.5vw] hover:bg-black hover:text-[#fffcfa] transition-all duration-300 cursor-pointer`}
             >
               ENTER PHOTOBOOTH
             </button>
           </Link>
 
           <button
-            className={`font-handjet ${handjet.className} bg-[#fffcfa] border-3 border-black px-[2.5vw] py-[1.2vh] text-[1.5vw] hover:bg-black hover:text-[#fffcfa] transition-all duration-300 cursor-pointer`}
+            className={`font-handjet ${handjet.className} bg-[#fffcfa] border-[3px] border-black px-[2.5vw] py-[1.2vh] text-[1.5vw] hover:bg-black hover:text-[#fffcfa] transition-all duration-300 cursor-pointer`}
           >
             VIEW GALLERY
           </button>

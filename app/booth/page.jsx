@@ -2,24 +2,27 @@
 
 import React, { useEffect, useState, useRef } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { Handjet } from "next/font/google";
 
 const handjet = Handjet({ subsets: ["latin"], weight: "600" });
 
 export default function BoothPage() {
   const videoRef = useRef(null);
+  const router = useRouter();
+
   const [selectedStrip, setSelectedStrip] = useState(null);
   const [timer, setTimer] = useState(7);
   const [isCounting, setIsCounting] = useState(false);
   const [photoCount, setPhotoCount] = useState(0);
-  const [photosTaken, setPhotosTaken] = useState([]); // hier slaan we de foto's op
+  const [photosTaken, setPhotosTaken] = useState([]);
+  const [photoTakenIndicator, setPhotoTakenIndicator] = useState(false);
 
+  // Ophalen gekozen strip + start webcam
   useEffect(() => {
-    // Ophalen welke photostrip gekozen is
     const strip = localStorage.getItem("selectedStrip");
     setSelectedStrip(strip);
 
-    // Start webcam
     const startWebcam = async () => {
       try {
         const stream = await navigator.mediaDevices.getUserMedia({ video: true });
@@ -35,14 +38,12 @@ export default function BoothPage() {
     startWebcam();
   }, []);
 
+  // Timer + foto nemen
   useEffect(() => {
     if (!isCounting) return;
 
     if (timer === 0) {
-      setIsCounting(false);
-      setPhotoCount((prev) => prev + 1);
-
-      // Maak een foto van de webcam
+      // Foto nemen
       if (videoRef.current) {
         const canvas = document.createElement("canvas");
         canvas.width = videoRef.current.videoWidth || 640;
@@ -51,31 +52,42 @@ export default function BoothPage() {
         ctx.drawImage(videoRef.current, 0, 0, canvas.width, canvas.height);
         const dataUrl = canvas.toDataURL("image/png");
 
-        setPhotosTaken((prev) => [...prev, dataUrl]);
+        setPhotosTaken((prev) => {
+          const newPhotos = [...prev, dataUrl];
+          localStorage.setItem("photosTaken", JSON.stringify(newPhotos));
+          return newPhotos;
+        });
       }
 
-      // Reset timer voor volgende foto (tot max 3)
-      if (photoCount + 1 < 3) {
-        setTimer(7);
-        setIsCounting(true);
-      }
+      setPhotoCount((prev) => prev + 1);
 
+      // Foto genomen indicatie tonen
+      setPhotoTakenIndicator(true);
+
+      setTimeout(() => {
+        setPhotoTakenIndicator(false);
+
+        // Na 3 foto's direct naar Printer
+        if (photoCount + 1 >= 3) {
+          router.push("/printer");
+        } else {
+          // Reset timer voor volgende foto
+          setTimer(7);
+          setIsCounting(true);
+        }
+      }, 2000); // 2 seconden pauze
+      setIsCounting(false); // pauzeert timer tot indicatie klaar is
       return;
     }
 
-    const interval = setInterval(() => {
-      setTimer((prev) => prev - 1);
-    }, 1000);
-
+    const interval = setInterval(() => setTimer((prev) => prev - 1), 1000);
     return () => clearInterval(interval);
-  }, [isCounting, timer, photoCount]);
+  }, [isCounting, timer, photoCount, router]);
 
   const handleStart = () => {
-    if (photoCount >= 3) {
-      alert("You have already taken 3 photos!");
-      return;
-    }
+    if (photoCount >= 3) return;
     setIsCounting(true);
+    setTimer(7);
   };
 
   return (
@@ -93,24 +105,32 @@ export default function BoothPage() {
       </div>
 
       {/* WEBCAM */}
-      <div className="relative w-[910px] h-[512px] bg-black border-[3px] border-white flex items-center justify-center mt-[6vh]">
+      <div className="relative w-[910px] h-[512px] bg-black border-[4px] border-black flex items-center justify-center mt-[6vh]">
         <video
           ref={videoRef}
           className="w-full h-full object-cover"
-          style={{ transform: "scaleX(-1)" }} // webcam niet gespiegeld
+          style={{ transform: "scaleX(-1)" }}
         ></video>
 
-        {/* Timer overlay */}
-        {isCounting && (
+        {/* TIMER OVERLAY */}
+        {isCounting && !photoTakenIndicator && (
           <span className={`absolute font-handjet ${handjet.className} text-[6vw] text-white`}>
             {timer}
           </span>
         )}
 
-        {/* Placeholder voor overlay */}
-        {/*
-          Hier kan je later de anime SVG overlay toevoegen
-          bijv: {selectedStrip === "/jjk_special.png" && <JJKOverlay />}
+        {/* FOTO GENOMEN INDICATIE */}
+        {photoTakenIndicator && (
+          <span className={`absolute font-handjet ${handjet.className} text-[6vw] text-white`}>
+            POSE!
+          </span>
+        )}
+
+        {/* Placeholder voor overlay specials */}
+        {/* 
+          if (selectedStrip === "/jjk_special.png") { 
+            <JJKOverlay /> 
+          } 
         */}
       </div>
 
@@ -123,20 +143,8 @@ export default function BoothPage() {
         INSERT COIN
       </button>
 
-      {/* Debug info */}
-      <p className="mt-6 text-black opacity-50">
-        Selected strip: {selectedStrip || "none"}
-      </p>
-      <p className="text-black opacity-50">
-        Photos taken: {photoCount} / 3
-      </p>
-
-      {/* Placeholder voor previews van foto's (nog uitgeschakeld) */}
-      {/*
-        {photosTaken.map((photo, idx) => (
-          <img key={idx} src={photo} alt={`Photo ${idx + 1}`} className="mt-4 w-40 border-2 border-white" />
-        ))}
-      */}
+      {/* DEBUG */}
+      <p className="mt-6 text-black opacity-50">Photos taken: {photoCount} / 3</p>
     </div>
   );
 }

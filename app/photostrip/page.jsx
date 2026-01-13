@@ -77,7 +77,7 @@ export default function PhotostripPage() {
 
       {/* Titel */}
       <h1 className={`text-[4vw] font-handjet ${handjet.className} mb-8`}>
-        CHOOSE YOUR PHOTO STRIP
+        CHOOSE YOUR PHOTO STRIP:
       </h1>
 
       {/* Optional: specials zouden hier kunnen komen */}
