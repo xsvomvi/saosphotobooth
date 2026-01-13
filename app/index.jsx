@@ -66,12 +66,14 @@ export default function Index() {
             </button>
           </Link>
 
-          <button
-            onClick={playButtonSound}
-            className={`font-handjet ${handjet.className} bg-[#fffcfa] border-[3px] border-black px-[2.5vw] py-[1.2vh] text-[1.5vw] hover:bg-black hover:text-[#fffcfa] transition-all duration-300 cursor-pointer`}
-          >
-            VIEW GALLERY
-          </button>
+          <Link href="/community">
+            <button
+              onClick={playButtonSound}
+              className={`font-handjet ${handjet.className} bg-[#fffcfa] border-[3px] border-black px-[2.5vw] py-[1.2vh] text-[1.5vw] hover:bg-black hover:text-[#fffcfa] transition-all duration-300 cursor-pointer`}
+            >
+              COMMUNITY
+            </button>
+          </Link>
         </div>
       </div>
 
