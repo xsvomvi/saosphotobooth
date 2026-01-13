@@ -12,29 +12,52 @@ export default function PrinterPage() {
   const [photos, setPhotos] = useState([]);
   const stripRef = useRef(null);
 
+  // Overlay per foto (zelfde mapping als BoothPage)
+  const specialOverlays = {
+    "/jjk_special.png": [
+      "/overlays/jjk_overlay1.svg",
+      "/overlays/jjk_overlay2.svg",
+      "/overlays/jjk_overlay3.svg",
+    ],
+    "/ds_special.png": [
+      "/overlays/ds_overlay1.svg",
+      "/overlays/ds_overlay2.svg",
+      "/overlays/ds_overlay3.svg",
+    ],
+    "/fr_special.png": [
+      "/overlays/fr_overlay1.svg",
+      "/overlays/fr_overlay2.svg",
+      "/overlays/fr_overlay3.svg",
+    ],
+  };
+
+  // Pixel-perfect y-coördinaten voor foto's op de strip
+  const photoPositions = [60, 170, 280];
+  const photoWidth = 187;
+  const photoHeight = 105.21;
+  const stripWidth = 205;
+  const stripHeight = 614;
+
   useEffect(() => {
     // Ophalen van gekozen photostrip
     const strip = localStorage.getItem("selectedStrip");
     setSelectedStrip(strip);
 
     // Ophalen van foto's (max 3)
-    const photosTaken =
-      JSON.parse(localStorage.getItem("photosTaken")) || [];
+    const photosTaken = JSON.parse(localStorage.getItem("photosTaken")) || [];
     setPhotos(photosTaken.slice(0, 3));
   }, []);
-
-  // Pixel-perfect y-coördinaten
-  const photoPositions = [60, 170, 280];
 
   const savePhotoStrip = async () => {
     if (!stripRef.current) return;
 
+    // html2canvas renderen
     const canvas = await html2canvas(stripRef.current, {
-      scale: 2, // hoge kwaliteit, zonder vervorming
+      scale: 2,
       useCORS: true,
       backgroundColor: null,
-      width: 205,
-      height: 614,
+      width: stripWidth,
+      height: stripHeight,
     });
 
     const image = canvas.toDataURL("image/png");
@@ -57,29 +80,29 @@ export default function PrinterPage() {
     >
       {/* GO BACK BUTTON */}
       <div className="absolute top-[3vh] left-[2vw] z-50">
-        <Link href="/booth">
+        <Link href="/">
           <button
             className={`font-handjet ${handjet.className} bg-[#fffcfa] border-[3px] border-black px-[2.5vw] py-[1.2vh] text-[1.5vw] hover:bg-black hover:text-[#fffcfa] transition-all duration-300 cursor-pointer`}
           >
-            GO BACK
+            LEAVE BOOTH
           </button>
         </Link>
       </div>
 
-      {/* PHOTOSTRIP CONTAINER (PIXEL-LOCKED) */}
+      {/* PHOTOSTRIP CONTAINER */}
       <div
         ref={stripRef}
         className="relative mt-7"
         style={{
-          width: "205px",
-          height: "614px",
+          width: `${stripWidth}px`,
+          height: `${stripHeight}px`,
           backgroundImage: `url(${selectedStrip})`,
-          backgroundSize: "205px 614px",
+          backgroundSize: `${stripWidth}px ${stripHeight}px`,
           backgroundRepeat: "no-repeat",
           backgroundPosition: "top left",
         }}
       >
-        {/* FOTO'S */}
+        {/* FOTO'S + OVERLAYS */}
         {photos.map((photo, idx) => (
           <div
             key={idx}
@@ -87,15 +110,27 @@ export default function PrinterPage() {
             style={{
               left: "9px",
               top: `${photoPositions[idx]}px`,
-              width: "187px",
-              height: "105.21px",
+              width: `${photoWidth}px`,
+              height: `${photoHeight}px`,
             }}
           >
+            {/* Foto */}
             <img
               src={photo}
               alt={`Photo ${idx + 1}`}
-              className="w-full h-full object-cover"
+              className="w-full h-full"
+              style={{ transform: "scaleX(-1)" }}
             />
+
+            {/* Overlay */}
+            {selectedStrip &&
+              specialOverlays[selectedStrip]?.[idx] && (
+                <img
+                  src={specialOverlays[selectedStrip][idx]}
+                  alt="Overlay"
+                  className="absolute top-0 left-0 w-full h-full pointer-events-none"
+                />
+              )}
           </div>
         ))}
       </div>

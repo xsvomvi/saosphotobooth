@@ -54,7 +54,7 @@ export default function Index() {
             <button
               className={`font-handjet ${handjet.className} bg-[#fffcfa] border-[3px] border-black px-[2.5vw] py-[1.2vh] text-[1.5vw] hover:bg-black hover:text-[#fffcfa] transition-all duration-300 cursor-pointer`}
             >
-              ENTER PHOTOBOOTH
+              ENTER BOOTH
             </button>
           </Link>
 

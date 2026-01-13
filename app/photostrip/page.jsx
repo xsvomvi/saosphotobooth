@@ -44,26 +44,51 @@ export default function PhotostripPage() {
     "/n_strip_5.png",
   ];
 
-  // Specials (nog niet actief, voor toekomstige overlay functionaliteit)
-  /*
-  const starStudioStrips = [
-    "/jjk_special.png",
-    "/ds_special.png",
-    "/fr_special.png",
+  // Star Studio Specials: strip + 3 overlays
+  const specialStrips = [
+    {
+      strip: "/jjk_special.png",
+      overlays: [
+        "/jjk_overlay1.svg",
+        "/jjk_overlay2.svg",
+        "/jjk_overlay3.svg",
+      ],
+    },
+    {
+      strip: "/ds_special.png",
+      overlays: [
+        "/ds_overlay1.svg",
+        "/ds_overlay2.svg",
+        "/ds_overlay3.svg",
+      ],
+    },
+    {
+      strip: "/fr_special.png",
+      overlays: [
+        "/fr_overlay1.svg",
+        "/fr_overlay2.svg",
+        "/fr_overlay3.svg",
+      ],
+    },
   ];
-  */
 
+  // Gewone strip selectie
   const handleSelectStrip = (src) => {
-    // Opslaan in localStorage zodat Booth weet welke photostrip gekozen is
     localStorage.setItem("selectedStrip", src);
+    localStorage.removeItem("specialOverlays"); // Clear specials
+    router.push("/booth");
+  };
 
-    // Doorsturen naar booth pagina
+  // Special strip selectie
+  const handleSelectSpecial = (special) => {
+    localStorage.setItem("selectedStrip", special.strip);
+    localStorage.setItem("specialOverlays", JSON.stringify(special.overlays));
     router.push("/booth");
   };
 
   return (
     <div className="relative flex flex-col items-center px-[5vw] py-[5vh]">
-      
+
       {/* GO BACK BUTTON */}
       <div className="absolute top-[3vh] left-[2vw] z-50">
         <Link href="/">
@@ -76,34 +101,33 @@ export default function PhotostripPage() {
       </div>
 
       {/* Titel */}
-        <h1
-          className={`mt-16 mb-8 font-handjet ${handjet.className} text-[4vw] text-center cursor-default`}
-        >
-          {"LET'S CHOOSE YOUR PHOTO STRIP.".split("").map((char, idx) => (
-            <span
-              key={idx}
-              className="pop-letter"
-              style={{ animationDelay: `${idx * 0.12}s` }}
-            >
-              {char === " " ? "\u00A0" : char}
-            </span>
-          ))}
-        </h1>
+      <h1
+        className={`mt-16 mb-8 font-handjet ${handjet.className} text-[4vw] text-center cursor-default`}
+      >
+        {"LET'S CHOOSE YOUR PHOTO STRIP.".split("").map((char, idx) => (
+          <span
+            key={idx}
+            className="pop-letter"
+            style={{ animationDelay: `${idx * 0.12}s` }}
+          >
+            {char === " " ? "\u00A0" : char}
+          </span>
+        ))}
+      </h1>
 
-      {/* Optional: specials zouden hier kunnen komen */}
-      {/*
-      <p className={`font-handjet ${handjet.className} text-[2vw] mb-4`}>
+      {/* SPECIAL STRIPS */}
+      <p className={`font-handjet ${handjet.className} text-[2vw] mb-6`}>
         [STAR STUDIO SPECIALS]
       </p>
-      <div className="flex justify-center gap-8 flex-wrap mb-12">
-        {starStudioStrips.map((src, idx) => (
+      <div className="flex justify-center gap-8 flex-wrap mb-20">
+        {specialStrips.map((special, idx) => (
           <div
             key={idx}
             className="cursor-pointer transition-transform hover:scale-105"
-            onClick={() => handleSelectStrip(src)}
+            onClick={() => handleSelectSpecial(special)}
           >
             <Image
-              src={src}
+              src={special.strip}
               alt={`Star Studio Photostrip ${idx + 1}`}
               width={200}
               height={600}
@@ -112,7 +136,6 @@ export default function PhotostripPage() {
           </div>
         ))}
       </div>
-      */}
 
       {/* Patterned: JJK */}
       <p className={`font-handjet ${handjet.className} text-[2vw] mb-6`}>
