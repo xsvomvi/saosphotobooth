@@ -1,27 +1,49 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import Link from "next/link";
 import { Handjet } from "next/font/google";
+import html2canvas from "html2canvas";
 
 const handjet = Handjet({ subsets: ["latin"], weight: "600" });
 
 export default function PrinterPage() {
   const [selectedStrip, setSelectedStrip] = useState(null);
   const [photos, setPhotos] = useState([]);
+  const stripRef = useRef(null);
 
   useEffect(() => {
     // Ophalen van gekozen photostrip
     const strip = localStorage.getItem("selectedStrip");
     setSelectedStrip(strip);
 
-    // Ophalen van 3 foto's
-    const photosTaken = JSON.parse(localStorage.getItem("photosTaken")) || [];
-    setPhotos(photosTaken.slice(0, 3)); // maximaal 3
+    // Ophalen van foto's (max 3)
+    const photosTaken =
+      JSON.parse(localStorage.getItem("photosTaken")) || [];
+    setPhotos(photosTaken.slice(0, 3));
   }, []);
 
-  // Exacte y-coördinaten van de foto's
-  const photoPositions = [60.7, 170.7, 280.7];
+  // Pixel-perfect y-coördinaten
+  const photoPositions = [60, 170, 280];
+
+  const savePhotoStrip = async () => {
+    if (!stripRef.current) return;
+
+    const canvas = await html2canvas(stripRef.current, {
+      scale: 2, // hoge kwaliteit, zonder vervorming
+      useCORS: true,
+      backgroundColor: null,
+      width: 205,
+      height: 614,
+    });
+
+    const image = canvas.toDataURL("image/png");
+
+    const link = document.createElement("a");
+    link.href = image;
+    link.download = "photostrip.png";
+    link.click();
+  };
 
   return (
     <div
@@ -30,7 +52,7 @@ export default function PrinterPage() {
         backgroundImage: "url('/printer_background.svg')",
         backgroundSize: "cover",
         backgroundPosition: "center",
-        backgroundRepeFat: "no-repeat",
+        backgroundRepeat: "no-repeat",
       }}
     >
       {/* GO BACK BUTTON */}
@@ -44,20 +66,29 @@ export default function PrinterPage() {
         </Link>
       </div>
 
-      {/* PHOTOSTRIP CONTAINER */}
+      {/* PHOTOSTRIP CONTAINER (PIXEL-LOCKED) */}
       <div
-        className="relative w-[205px] h-[614px] bg-cover bg-center mt-7"
+        ref={stripRef}
+        className="relative mt-7"
         style={{
-          backgroundImage: `url(${selectedStrip})`, // PNG als overlay
+          width: "205px",
+          height: "614px",
+          backgroundImage: `url(${selectedStrip})`,
+          backgroundSize: "205px 614px",
+          backgroundRepeat: "no-repeat",
+          backgroundPosition: "top left",
         }}
       >
         {/* FOTO'S */}
         {photos.map((photo, idx) => (
           <div
             key={idx}
-            className="absolute left-[9.1px] w-[186px] h-[105px] overflow-hidden"
+            className="absolute overflow-hidden"
             style={{
+              left: "9px",
               top: `${photoPositions[idx]}px`,
+              width: "187px",
+              height: "105.21px",
             }}
           >
             <img
@@ -69,10 +100,10 @@ export default function PrinterPage() {
         ))}
       </div>
 
-      {/* BUTTONS */}
+      {/* SAVE BUTTON */}
       <div className="flex">
         <button
-          onClick={() => window.print()}
+          onClick={savePhotoStrip}
           className={`font-handjet ${handjet.className} bg-[#fffcfa] border-[3px] border-black px-[2.5vw] py-[1.2vh] text-[1.5vw] hover:bg-black hover:text-[#fffcfa] transition-all duration-300 cursor-pointer mt-15`}
         >
           SAVE PHOTO STRIP

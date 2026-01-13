@@ -18,6 +18,10 @@ export default function BoothPage() {
   const [photosTaken, setPhotosTaken] = useState([]);
   const [photoTakenIndicator, setPhotoTakenIndicator] = useState(false);
 
+  // Fotostrip-slot afmetingen
+  const photoSlotWidth = 187;
+  const photoSlotHeight = 105.21;
+
   // Ophalen gekozen strip + start webcam
   useEffect(() => {
     const strip = localStorage.getItem("selectedStrip");
@@ -45,11 +49,28 @@ export default function BoothPage() {
     if (timer === 0) {
       // Foto nemen
       if (videoRef.current) {
+        // Maak canvas van fotostrip-slot grootte
         const canvas = document.createElement("canvas");
-        canvas.width = videoRef.current.videoWidth || 640;
-        canvas.height = videoRef.current.videoHeight || 480;
+        canvas.width = photoSlotWidth;
+        canvas.height = photoSlotHeight;
         const ctx = canvas.getContext("2d");
-        ctx.drawImage(videoRef.current, 0, 0, canvas.width, canvas.height);
+
+        // Crop/scale webcam naar fotostrip-slot
+        const videoWidth = videoRef.current.videoWidth;
+        const videoHeight = videoRef.current.videoHeight;
+
+        // Bereken scaling factor om video volledig te vullen (cover)
+        const scale = Math.max(photoSlotWidth / videoWidth, photoSlotHeight / videoHeight);
+
+        const scaledWidth = videoWidth * scale;
+        const scaledHeight = videoHeight * scale;
+
+        // Bereken offsets om het midden van video te centreren
+        const offsetX = (photoSlotWidth - scaledWidth) / 2;
+        const offsetY = (photoSlotHeight - scaledHeight) / 2;
+
+        ctx.drawImage(videoRef.current, 0, 0, videoWidth, videoHeight, offsetX, offsetY, scaledWidth, scaledHeight);
+
         const dataUrl = canvas.toDataURL("image/png");
 
         setPhotosTaken((prev) => {
@@ -96,7 +117,7 @@ export default function BoothPage() {
         backgroundImage: "url('/booth_background.svg')",
         backgroundSize: "cover",
         backgroundPosition: "center",
-        backgroundRepeFat: "no-repeat",
+        backgroundRepeat: "no-repeat",
       }}
     >
 
@@ -132,13 +153,6 @@ export default function BoothPage() {
             POSE!
           </span>
         )}
-
-        {/* Placeholder voor overlay specials */}
-        {/* 
-          if (selectedStrip === "/jjk_special.png") { 
-            <JJKOverlay /> 
-          } 
-        */}
       </div>
 
       {/* INSERT COIN BUTTON */}
