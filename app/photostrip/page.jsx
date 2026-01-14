@@ -141,7 +141,7 @@ export default function PhotostripPage() {
       </h1>
 
       {/* SECTION TEMPLATE */}
-      {[
+      {[ 
         ["[STAR STUDIO SPECIALS]", specialStrips, true],
         ["[JUJUTSU KAISEN INSPIRED]", patternedStripsJJK],
         ["[DEMON SLAYER INSPIRED]", patternedStripsDS],
@@ -170,9 +170,12 @@ export default function PhotostripPage() {
                 <Image
                   src={isSpecial ? item.strip : item}
                   alt="Photostrip"
-                  width={180}
-                  height={540}
-                  className="object-contain w-[140px] md:w-[200px]"
+                  width={140} 
+                  height={420}
+                  className="object-contain w-[140px] h-[420px]"
+                  layout="intrinsic" // Behoud de beeldverhouding
+                  quality={100} // Beste kwaliteit
+                  style={{ imageRendering: "auto" }} // Zorg voor scherpte
                 />
               </div>
             ))}

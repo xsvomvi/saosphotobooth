@@ -168,7 +168,10 @@ export default function BoothPage() {
       </div>
 
       {/* WEBCAM + OVERLAY */}
-      <div className="relative w-full max-w-[900px] mt-20" style={{ aspectRatio: "16/9" }}>
+      <div
+        className="relative w-full max-w-[900px] mt-20" 
+        style={{ aspectRatio: "16/9" }}
+      >
         {/* Video */}
         <video
           ref={videoRef}
@@ -182,6 +185,9 @@ export default function BoothPage() {
             src={currentOverlay}
             alt="Overlay"
             className="absolute inset-0 w-full h-full object-contain pointer-events-none z-20"
+            style={{
+              imageRendering: "auto", // Zorg ervoor dat de SVG optimaal wordt weergegeven
+            }}
           />
         )}
 

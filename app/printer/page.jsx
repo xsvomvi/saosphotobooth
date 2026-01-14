@@ -51,9 +51,9 @@ export default function PrinterPage() {
   const savePhotoStrip = async () => {
     if (!stripRef.current) return;
 
-    // html2canvas renderen
+    // html2canvas renderen met hogere schaal
     const canvas = await html2canvas(stripRef.current, {
-      scale: 2,
+      scale: 4,  // Verhoog de resolutie
       useCORS: true,
       backgroundColor: null,
       width: stripWidth,
@@ -100,12 +100,22 @@ export default function PrinterPage() {
         style={{
           width: `${stripWidth}px`,
           height: `${stripHeight}px`,
-          backgroundImage: `url(${selectedStrip})`,
-          backgroundSize: `${stripWidth}px ${stripHeight}px`,
-          backgroundRepeat: "no-repeat",
-          backgroundPosition: "top left",
+          position: "relative",
         }}
       >
+        {/* Achtergrond als een afbeelding */}
+        <img
+          src={selectedStrip}
+          alt="Selected Strip"
+          className="absolute inset-0 w-full h-full"
+          style={{
+            objectFit: "cover",
+            width: `${stripWidth}px`,
+            height: `${stripHeight}px`,
+            imageRendering: "pixelated", // Zorg voor scherpere schaling
+          }}
+        />
+
         {/* FOTO'S + OVERLAYS */}
         {photos.map((photo, idx) => (
           <div
@@ -127,14 +137,14 @@ export default function PrinterPage() {
             />
 
             {/* Overlay */}
-            {selectedStrip &&
-              specialOverlays[selectedStrip]?.[idx] && (
-                <img
-                  src={specialOverlays[selectedStrip][idx]}
-                  alt="Overlay"
-                  className="absolute top-0 left-0 w-full h-full pointer-events-none"
-                />
-              )}
+            {selectedStrip && specialOverlays[selectedStrip]?.[idx] && (
+              <img
+                src={specialOverlays[selectedStrip][idx]}
+                alt="Overlay"
+                className="absolute top-0 left-0 w-full h-full pointer-events-none"
+                style={{ imageRendering: "pixelated" }}  // Zorg ervoor dat de overlays scherp blijven
+              />
+            )}
           </div>
         ))}
       </div>
