@@ -78,11 +78,15 @@ export default function PrinterPage() {
         backgroundRepeat: "no-repeat",
       }}
     >
-      {/* GO BACK BUTTON */}
-      <div className="absolute top-[3vh] left-[2vw] z-50">
+      {/* GO BACK */}
+      <div className="fixed top-4 left-4 z-50">
         <Link href="/">
           <button
-            className={`font-handjet ${handjet.className} bg-[#fffcfa] border-[3px] border-black px-[2.5vw] py-[1.2vh] text-[1.5vw] hover:bg-black hover:text-[#fffcfa] transition-all duration-300 cursor-pointer`}
+            className={`font-handjet ${handjet.className}
+            bg-[#fffcfa] border-[3px] border-black
+            px-6 py-3 text-base md:text-[1.5vw]
+            hover:bg-black hover:text-[#fffcfa]
+            transition-all`}
           >
             LEAVE BOOTH
           </button>
@@ -136,22 +140,24 @@ export default function PrinterPage() {
       </div>
 
       {/* SAVE BUTTON */}
-      <div className="flex mt-auto">
-        <button
-          onClick={() => {
-            // Speel button geluid af
-            const audio = new Audio("/button.mp3");
-            audio.volume = 0.1;
-            audio.play().catch((err) => console.error("Audio play error:", err));
-
-            // Save photostrip
-            savePhotoStrip();
-          }}
-          className={`font-handjet ${handjet.className} bg-[#fffcfa] border-[3px] border-black px-[2.5vw] py-[1.2vh] text-[1.5vw] hover:bg-black hover:text-[#fffcfa] transition-all duration-300 cursor-pointer`}
-        >
-          SAVE PHOTO STRIP
-        </button>
-      </div>
+      <button
+        onClick={() => {
+          const audio = new Audio("/button.mp3");
+          audio.volume = 0.1;
+          audio.play().catch((err) =>
+            console.error("Audio play error:", err)
+          );
+          savePhotoStrip();
+        }}
+        className={`mt-8 font-handjet ${handjet.className}
+        bg-[#fffcfa] border-[3px] border-black
+        px-8 py-4 text-lg md:text-[1.5vw]
+        hover:bg-black hover:text-[#fffcfa]
+        transition-all
+        disabled:opacity-50 disabled:cursor-not-allowed`}
+      >
+        SAVE PHOTO STRIP
+      </button>
     </div>
   );
 }

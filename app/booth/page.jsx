@@ -22,7 +22,6 @@ export default function BoothPage() {
   const photoSlotWidth = 187;
   const photoSlotHeight = 105.21;
 
-  // Overlays voor speciale strips
   const specialOverlays = {
     "/jjk_special.png": [
       "/overlays/jjk_overlay1.svg",
@@ -41,19 +40,19 @@ export default function BoothPage() {
     ],
   };
 
-  // Ophalen gekozen strip + start webcam
   useEffect(() => {
     const strip = localStorage.getItem("selectedStrip");
     setSelectedStrip(strip);
 
-    // Start eerste overlay meteen
     if (strip && specialOverlays[strip]) {
       setCurrentOverlayIndex(0);
     }
 
     const startWebcam = async () => {
       try {
-        const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+        const stream = await navigator.mediaDevices.getUserMedia({
+          video: { facingMode: "user" },
+        });
         if (videoRef.current) {
           videoRef.current.srcObject = stream;
           videoRef.current.play();
@@ -66,88 +65,83 @@ export default function BoothPage() {
     startWebcam();
   }, []);
 
-  // Timer + foto nemen
   useEffect(() => {
     if (!isCounting) return;
 
     if (timer === 0) {
-      // Neem foto
       if (videoRef.current) {
         const canvas = document.createElement("canvas");
         canvas.width = photoSlotWidth;
         canvas.height = photoSlotHeight;
         const ctx = canvas.getContext("2d");
 
-        const videoWidth = videoRef.current.videoWidth;
-        const videoHeight = videoRef.current.videoHeight;
+        const vw = videoRef.current.videoWidth;
+        const vh = videoRef.current.videoHeight;
 
-        const scale = Math.max(photoSlotWidth / videoWidth, photoSlotHeight / videoHeight);
-        const scaledWidth = videoWidth * scale;
-        const scaledHeight = videoHeight * scale;
-        const offsetX = (photoSlotWidth - scaledWidth) / 2;
-        const offsetY = (photoSlotHeight - scaledHeight) / 2;
+        const scale = Math.max(
+          photoSlotWidth / vw,
+          photoSlotHeight / vh
+        );
 
-        ctx.drawImage(videoRef.current, 0, 0, videoWidth, videoHeight, offsetX, offsetY, scaledWidth, scaledHeight);
+        const sw = vw * scale;
+        const sh = vh * scale;
+        const ox = (photoSlotWidth - sw) / 2;
+        const oy = (photoSlotHeight - sh) / 2;
+
+        ctx.drawImage(videoRef.current, 0, 0, vw, vh, ox, oy, sw, sh);
 
         const dataUrl = canvas.toDataURL("image/png");
 
         setPhotosTaken((prev) => {
-          const newPhotos = [...prev, dataUrl];
-          localStorage.setItem("photosTaken", JSON.stringify(newPhotos));
-          return newPhotos;
+          const updated = [...prev, dataUrl];
+          localStorage.setItem("photosTaken", JSON.stringify(updated));
+          return updated;
         });
 
-        // SPEEL CAMERA GELUID AF bij het nemen van de foto
         const cameraSound = new Audio("/camera.mp3");
         cameraSound.volume = 0.05;
-        cameraSound.play().catch((err) => console.error("Audio play error:", err));
+        cameraSound.play().catch(() => {});
       }
 
-      // Verhoog foto teller
-      setPhotoCount((prev) => prev + 1);
+      setPhotoCount((p) => p + 1);
       setPhotoTakenIndicator(true);
       setIsCounting(false);
 
       setTimeout(() => {
-        // Na foto: Pose-indicatie + overlay switchen voor volgende foto
         setPhotoTakenIndicator(false);
 
         if (selectedStrip && specialOverlays[selectedStrip]) {
-          // Switch overlay voor volgende foto (alleen als er nog één is)
           if (photoCount + 1 < specialOverlays[selectedStrip].length) {
             setCurrentOverlayIndex(photoCount + 1);
           }
         }
 
-        // Als alle foto's genomen zijn, door naar printer
         if (photoCount + 1 >= 3) {
           router.push("/printer");
         } else {
           setTimer(7);
           setIsCounting(true);
         }
-      }, 2000); // 2 seconden pose-indicatie
+      }, 2000);
+
       return;
     }
 
-    const interval = setInterval(() => setTimer((prev) => prev - 1), 1000);
+    const interval = setInterval(() => setTimer((t) => t - 1), 1000);
     return () => clearInterval(interval);
-  }, [isCounting, timer, photoCount, router, selectedStrip]);
+  }, [isCounting, timer, photoCount, selectedStrip, router]);
 
-  // Start de booth
   const handleStart = () => {
     if (photoCount >= 3) return;
 
-    // Coin geluid
     const coinSound = new Audio("/coin.mp3");
     coinSound.volume = 0.03;
-    coinSound.play().catch((err) => console.error("Audio play error:", err));
+    coinSound.play().catch(() => {});
 
     setIsCounting(true);
     setTimer(7);
   };
 
-  // Huidige overlay
   const currentOverlay =
     selectedStrip && specialOverlays[selectedStrip]
       ? specialOverlays[selectedStrip][currentOverlayIndex] || null
@@ -155,19 +149,22 @@ export default function BoothPage() {
 
   return (
     <div
-      className="relative flex flex-col items-center justify-center w-full h-screen"
+      className="relative flex flex-col items-center justify-center w-full min-h-screen px-4"
       style={{
         backgroundImage: "url('/booth_background.svg')",
         backgroundSize: "cover",
         backgroundPosition: "center",
-        backgroundRepeat: "no-repeat",
       }}
     >
-      {/* GO BACK BUTTON */}
-      <div className="absolute top-[3vh] left-[2vw] z-50">
+      {/* GO BACK */}
+      <div className="fixed top-4 left-4 z-50">
         <Link href="/photostrip">
           <button
-            className={`font-handjet ${handjet.className} bg-[#fffcfa] border-[3px] border-black px-[2.5vw] py-[1.2vh] text-[1.5vw] hover:bg-black hover:text-[#fffcfa] transition-all duration-300 cursor-pointer`}
+            className={`font-handjet ${handjet.className}
+            bg-[#fffcfa] border-[3px] border-black
+            px-6 py-3 text-base md:text-[1.5vw]
+            hover:bg-black hover:text-[#fffcfa]
+            transition-all`}
           >
             GO BACK
           </button>
@@ -175,47 +172,47 @@ export default function BoothPage() {
       </div>
 
       {/* WEBCAM */}
-      <div className="relative w-[910px] h-[512px] bg-black border-[4px] border-black flex items-center justify-center mt-16">
+      <div className="relative w-full max-w-[900px] aspect-video bg-black border-[4px] border-black mt-20">
         <video
           ref={videoRef}
           className="w-full h-full object-cover"
           style={{ transform: "scaleX(-1)" }}
-        ></video>
+        />
 
-        {/* Overlay SVG */}
         {currentOverlay && (
           <img
             src={currentOverlay}
             alt="Overlay"
-            className="absolute top-0 left-0 w-full h-full pointer-events-none z-20"
+            className="absolute inset-0 w-full h-full pointer-events-none z-20"
           />
         )}
 
-        {/* TIMER OVERLAY */}
         {isCounting && !photoTakenIndicator && (
-          <span className={`absolute font-handjet ${handjet.className} text-[6vw] text-white z-30`}>
+          <span
+            className={`absolute inset-0 flex items-center justify-center
+            font-handjet ${handjet.className}
+            text-6xl md:text-[6vw] text-white z-30`}
+          >
             {timer}
-          </span>
-        )}
-
-        {/* FOTO GENOMEN INDICATIE */}
-        {photoTakenIndicator && (
-          <span className={`absolute font-handjet ${handjet.className} text-[6vw] text-white z-30`}>
           </span>
         )}
       </div>
 
-      {/* INSERT COIN BUTTON */}
+      {/* INSERT COIN */}
       <button
         onClick={handleStart}
         disabled={isCounting || photoCount >= 3}
-        className={`font-handjet ${handjet.className} bg-[#fffcfa] border-[3px] border-black px-[2.5vw] py-[1.2vh] text-[1.5vw] hover:bg-black hover:text-[#fffcfa] transition-all duration-300 cursor-pointer mt-8 disabled:opacity-50 disabled:cursor-not-allowed`}
+        className={`mt-8 font-handjet ${handjet.className}
+        bg-[#fffcfa] border-[3px] border-black
+        px-8 py-4 text-lg md:text-[1.5vw]
+        hover:bg-black hover:text-[#fffcfa]
+        transition-all
+        disabled:opacity-50 disabled:cursor-not-allowed`}
       >
         INSERT COIN
       </button>
 
-      {/* DEBUG */}
-      <p className="mt-6 text-black opacity-50">
+      <p className="mt-4 text-black opacity-50">
         PHOTOS TAKEN: {photoCount}/3
       </p>
     </div>
