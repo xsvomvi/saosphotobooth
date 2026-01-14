@@ -78,11 +78,7 @@ export default function BoothPage() {
         const vw = videoRef.current.videoWidth;
         const vh = videoRef.current.videoHeight;
 
-        const scale = Math.max(
-          photoSlotWidth / vw,
-          photoSlotHeight / vh
-        );
-
+        const scale = Math.max(photoSlotWidth / vw, photoSlotHeight / vh);
         const sw = vw * scale;
         const sh = vh * scale;
         const ox = (photoSlotWidth - sw) / 2;
@@ -162,7 +158,7 @@ export default function BoothPage() {
           <button
             className={`font-handjet ${handjet.className}
             bg-[#fffcfa] border-[3px] border-black
-            px-6 py-3 text-base md:text-[1.5vw]
+            px-6 py-3 text-base
             hover:bg-black hover:text-[#fffcfa]
             transition-all`}
           >
@@ -171,22 +167,25 @@ export default function BoothPage() {
         </Link>
       </div>
 
-      {/* WEBCAM */}
-      <div className="relative w-full max-w-[900px] aspect-video bg-black border-[4px] border-black mt-20">
+      {/* WEBCAM + OVERLAY */}
+      <div className="relative w-full max-w-[900px] mt-20" style={{ aspectRatio: "16/9" }}>
+        {/* Video */}
         <video
           ref={videoRef}
-          className="w-full h-full object-cover"
+          className="absolute inset-0 w-full h-full object-cover"
           style={{ transform: "scaleX(-1)" }}
         />
 
+        {/* Overlay SVG */}
         {currentOverlay && (
           <img
             src={currentOverlay}
             alt="Overlay"
-            className="absolute inset-0 w-full h-full pointer-events-none z-20"
+            className="absolute inset-0 w-full h-full object-contain pointer-events-none z-20"
           />
         )}
 
+        {/* Timer */}
         {isCounting && !photoTakenIndicator && (
           <span
             className={`absolute inset-0 flex items-center justify-center
@@ -198,13 +197,13 @@ export default function BoothPage() {
         )}
       </div>
 
-      {/* INSERT COIN */}
+      {/* INSERT COIN BUTTON */}
       <button
         onClick={handleStart}
         disabled={isCounting || photoCount >= 3}
         className={`mt-8 font-handjet ${handjet.className}
         bg-[#fffcfa] border-[3px] border-black
-        px-8 py-4 text-lg md:text-[1.5vw]
+        px-8 py-4 text-lg
         hover:bg-black hover:text-[#fffcfa]
         transition-all
         disabled:opacity-50 disabled:cursor-not-allowed`}
